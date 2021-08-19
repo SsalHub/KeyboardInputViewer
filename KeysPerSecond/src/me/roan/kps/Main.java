@@ -1849,13 +1849,13 @@ public class Main{
 	static{
 		Image img;
 		try{
-			img = ImageIO.read(ClassLoader.getSystemResource("kps_small.png"));
+			img = ImageIO.read(ClassLoader.getSystemResource("kiv_small.png"));
 		}catch(IOException e){
 			img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
 		}
 		iconSmall = img;
 		try{
-			img = ImageIO.read(ClassLoader.getSystemResource("kps.png"));
+			img = ImageIO.read(ClassLoader.getSystemResource("kiv.png"));
 		}catch(IOException e){
 			img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_RGB);
 		}
