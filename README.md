@@ -19,11 +19,13 @@ For each configured key the program will show how many times it was pressed. And
 When enabled it can also show a graph of the number of keys pressed per second over time and the total number of keys pressed.
 
 Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.      
-![Config](https://user-images.githubusercontent.com/53378637/128697306-06a41740-5e5c-413b-a3f6-fcb234ed42c2.jpg)  
-![Key config](https://user-images.githubusercontent.com/53378637/128698093-ea198e06-9d77-4096-b7a6-4ffc128b37f3.jpg)   
-![Layout](https://user-images.githubusercontent.com/53378637/128697309-30c1d2ba-bdd8-49ad-a7fd-9fa83677038f.jpg)   
-![Advanced layout settings](https://user-images.githubusercontent.com/53378637/128697313-2234c050-ab65-43ee-8eaf-ac29113af6ca.jpg)
-![Bind image to key](https://user-images.githubusercontent.com/53378637/128697312-8c55b0d4-7467-4478-b34b-3fd474983550.jpg)
+![Config](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbFCxJy%2FbtrczJtJByw%2Frei1RmyKHX9EiJiUXq6eCk%2Fimg.jpg)  
+![Key config](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbh9dlE%2FbtrczIBDh6S%2FW4iaKv84oXv52xKndNT1C0%2Fimg.jpg)  
+![Key config1]https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcCGU7f%2FbtrczQsxoX8%2FURvne3EYQJO3AW1XClP021%2Fimg.jpg) 
+![Layout](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F0OZ3L%2FbtrczKGakrT%2FwlteKDGxhruXjXPelozD81%2Fimg.jpg)   
+![Advanced layout settings](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FUo69f%2FbtrczIImQvv%2FvHyfLA5DMyRmdmWRI8cy2K%2Fimg.jpg)
+![Bind image to key](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbmvvVI%2FbtrcEv85HEy%2FLGuyXZOf9xcbP9kWH4OuE0%2Fimg.jpg)
+![image resource folder](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FJTs3c%2FbtrcFWyCLhe%2FKJ4ucFf70umfjdDknEn3U0%2Fimg.jpg)
 
 There are also some commands that can be sent to the program:    
 **Ctrl + P**: Causes the program to reset the average and maximum value.    
@@ -37,10 +39,6 @@ You can also move the program using the arrow keys or snap it to the edges of yo
 
 Well I hope some of you find this program useful and/or will use it for your streams (I would love to see that happen  :) ).
 And if you find any bugs feel free to report them. If you have any features you'd like to see added please tell me as well!
-
-## Pre-Created Config Files
-![Pre-Created Config Files](https://user-images.githubusercontent.com/53378637/128699216-be6da37b-0467-41e4-b81b-a28045cecc35.jpg)
-You don't have to set key/layout config from scratch. I already made some example config files on 'config' folder. You can load a file which you want to use.
 
 ## Notes
 - The horizontal line in the graph represents the average number of keys pressed per second.
@@ -60,10 +58,10 @@ You don't have to set key/layout config from scratch. I already made some exampl
 It's kinda empty here right now :c, so please suggest things c:    
 
 ## Downloads
-- [Zip](https://github.com/SsalHub/LSkeyspersecond/releases/download/1.0/KeysPerSecond_LS_alpha-1.0.zip)    
+- [Zip](https://github.com/SsalHub/KeyboardInputViewer/releases/download/1.0/KeyboardInputViewer_1.0.zip)    
 
-All releases: [releases](https://github.com/SsalHub/LSkeyspersecond/releases)    
-GitHub repository: [here](https://github.com/SsalHub/LSkeyspersecond)
+All releases: [releases](https://github.com/SsalHub/KeyboardInputViewer/releases)    
+GitHub repository: [here](https://github.com/SsalHub/KeyboardInputViewer)
 
 ## Examples
 The following two examples show the layout while it is being edited. All the panels have to line up with the grid, but the size of the grid cells can be changed.    
