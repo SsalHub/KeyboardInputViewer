@@ -21,7 +21,7 @@ When enabled it can also show a graph of the number of keys pressed per second o
 Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.      
 ![Config](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbFCxJy%2FbtrczJtJByw%2Frei1RmyKHX9EiJiUXq6eCk%2Fimg.jpg)  
 ![Key config](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbh9dlE%2FbtrczIBDh6S%2FW4iaKv84oXv52xKndNT1C0%2Fimg.jpg)  
-![Key config1]https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcCGU7f%2FbtrczQsxoX8%2FURvne3EYQJO3AW1XClP021%2Fimg.jpg) 
+![Key config1](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcCGU7f%2FbtrczQsxoX8%2FURvne3EYQJO3AW1XClP021%2Fimg.jpg) 
 ![Layout](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F0OZ3L%2FbtrczKGakrT%2FwlteKDGxhruXjXPelozD81%2Fimg.jpg)   
 ![Advanced layout settings](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FUo69f%2FbtrczIImQvv%2FvHyfLA5DMyRmdmWRI8cy2K%2Fimg.jpg)
 ![Bind image to key](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbmvvVI%2FbtrcEv85HEy%2FLGuyXZOf9xcbP9kWH4OuE0%2Fimg.jpg)
