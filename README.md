@@ -1,13 +1,13 @@
-# Keys Per Second for LostSaga
+# Keyboard Input Viewer
 
-KeysPerSecond for Lostsaga is a program that counts how many times certain keys are pressed. And shows what the average, maximum and current number of keys pressed per second is and image of LostSaga heroes. The program can also show a nice graph of the key presses over time.    
+KeyboardInputViewer is a program that displays keyboard input on your screen. It also shows what the average, maximum and current number of keys pressed per second is and images on 'images' forder. The program can also show a nice graph of the key presses over time.    
 Almost all aspects of the program are also fully customizable. This program modified KeysPerSecond : [Original](https://github.com/RoanH/KeysPerSecond)
 
 
 [Jump directly to downloads](#downloads)
 
 # Introduction
-Originally I wanted to make a keyboard input viewer like KeysPerSecond for LostSaga. So I modified RoanH's KPS.
+Originally I wanted to make a keyboard input viewer like KeysPerSecond. So I modified RoanH's KeysPerSecond.
 
 The program when active looks like this:    
 ![Interface](https://user-images.githubusercontent.com/53378637/128698767-a8a2ff04-463b-4c6a-8d38-fcc47f95224f.jpg)

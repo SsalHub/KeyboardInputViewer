@@ -109,8 +109,8 @@ public class VersionControl {
 		
 		if(Dialog.showDialog(new JLabel("You can update to " + latestVer + " version."), false, new String[]{"Update", "No"}) == 0) {
 			// run auto update 
-			String fileUrl = "https://github.com/SsalHub/" + repos + "/releases/download/" + latestVer + "/KeysPerSecond_LS_" + latestVer + ".exe";
-            String fileName = "KeysPerSecond_LS_" + latestVer + ".exe";
+			String fileName = "KeyboardInputViewer_" + latestVer + ".exe";
+			String fileUrl = "https://github.com/SsalHub/" + repos + "/releases/download/" + latestVer + "/" + fileName;
             
             new Thread(()->{
                 JDialog downloadDialog = new JOptionPane(new JLabel("Downloading " + fileName + " ..."), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {}, 0).createDialog("Download latest version");
