@@ -6,7 +6,13 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
+	<classpathentry kind="lib" path="C:/Users/delynet/.gradle/caches/modules-2/files-2.1/com.github.RoanH/Util/v1.6/3bc7c1a6a8b068d9241b0574c2f9ad7c9fb0260f/Util-v1.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/delynet/.gradle/caches/modules-2/files-2.1/com.github.kwhat/jnativehook/2.2-20210323.163306-38/e9ad1f0c1b18247816abba9ddc5ec91a7b6df575/jnativehook-2.2-20210323.163306-38.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

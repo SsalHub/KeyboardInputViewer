@@ -59,4 +59,9 @@ public final class MaxPanel extends BasePanel{
 	protected RenderingMode getRenderingMode(){
 		return Main.config.max_mode;
 	}
+	
+	@Override
+	protected String getBindImg() {
+		return Main.config.max_bImg;
+	}
 }

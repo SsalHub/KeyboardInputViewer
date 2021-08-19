@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -355,7 +356,10 @@ public class Menu{
 			Main.reconfigure();
 		});
 		configkeys.addActionListener((e)->{
-			KeysDialog.configureKeys();
+			//KeysDialog.configureKeys();
+			if(Main.config.keyinfo.isEmpty()) KeysDialog.selectKeyMode();
+			else KeysDialog.configureKeys();
+			
 			Main.reconfigure();
 		});
 		colorcustom.addActionListener((e)->{
@@ -397,6 +401,7 @@ public class Menu{
 		});
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(true);
+			LayoutDialog.live = true;
 			Main.reconfigure();
 		});
 		rates[0] = new JCheckBoxMenuItem("1000ms", Main.config.updateRate == 1000);

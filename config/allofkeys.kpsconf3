@@ -1,0 +1,180 @@
+# General
+showMax: false
+showAvg: false
+showCur: false
+showTotal: false
+showKeys: true
+overlay: false
+trackAllKeys: false
+trackAllButtons: false
+updateRate: 1000
+precision: 0
+enableKeyModifierCombinations: false
+
+# Graph
+graphEnabled: false
+graphBacklog: 30
+graphAverage: true
+
+# Colors
+customColors: false
+foregroundColor: [r=0,g=255,b=255]
+backgroundColor: [r=0,g=0,b=0]
+foregroundOpacity: 1.0
+backgroundOpacity: 1.0
+
+# Command keys
+keyResetStats: [keycode=25,ctrl=true,alt=false]
+keyExit: [keycode=22,ctrl=true,alt=false]
+keyResetTotals: [keycode=23,ctrl=true,alt=false]
+keyHide: [keycode=21,ctrl=true,alt=false]
+keyPause: [keycode=20,ctrl=true,alt=false]
+keyReload: [keycode=19,ctrl=true,alt=false]
+
+# Layout
+maxX: -1
+maxY: 0
+maxWidth: 2
+maxHeight: 3
+maxMode: VERTICAL
+maxBingImg: null
+avgX: -1
+avgY: 0
+avgWidth: 2
+avgHeight: 3
+avgMode: VERTICAL
+avgBingImg: null
+curX: -1
+curY: 0
+curWidth: 2
+curHeight: 3
+curMode: VERTICAL
+curBingImg: null
+totX: -1
+totY: 0
+totWidth: 2
+totHeight: 3
+totMode: VERTICAL
+totBingImg: null
+graphX: 0
+graphY: -1
+graphWidth: -1
+graphHeight: 3
+graphMode: INLINE
+cellSize: 22
+borderOffset: 2
+
+# Stats auto saving
+autoSaveStats: false
+statsDest: C:\Users\delynet
+statsFormat: 'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'
+statsSaveInterval: 600000
+saveStatsOnExit: false
+loadStatsOnLaunch: false
+statsSaveFile: C:\Users\delynet\stats.kpsstats
+
+# Keys
+keys: 
+  - [keycode=1048605,x=12,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Ctrl"]
+  - [keycode=1052251,x=14,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Windows"]
+  - [keycode=1048632,x=16,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Alt"]
+  - [keycode=1048633,x=18,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="SP"]
+  - [keycode=1048688,x=20,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Katakana"]
+  - [keycode=1052253,x=22,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Context Menu"]
+  - [keycode=1048697,x=24,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Kanji"]
+  - [keycode=1105995,x=26,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Left"]
+  - [keycode=1106000,x=28,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Down"]
+  - [keycode=1105997,x=30,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Right"]
+  - [keycode=1048587,x=32,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_0"]
+  - [keycode=1048659,x=34,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_."]
+  - [keycode=1048604,x=36,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_Enter"]
+  - [keycode=1048618,x=38,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Shift"]
+  - [keycode=1048620,x=40,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Z"]
+  - [keycode=1048621,x=42,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="X"]
+  - [keycode=1048622,x=44,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="C"]
+  - [keycode=1048623,x=46,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="V"]
+  - [keycode=1048624,x=48,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="B"]
+  - [keycode=1048625,x=50,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="N"]
+  - [keycode=1048626,x=52,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="M"]
+  - [keycode=1048627,x=54,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name=","]
+  - [keycode=1048628,x=56,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="."]
+  - [keycode=1048629,x=58,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="/"]
+  - [keycode=1576502,x=60,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Right Shift"]
+  - [keycode=1105992,x=62,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Up"]
+  - [keycode=1048578,x=64,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_1"]
+  - [keycode=1048579,x=66,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_2"]
+  - [keycode=1048580,x=68,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_3"]
+  - [keycode=1048634,x=70,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Cap"]
+  - [keycode=1048606,x=72,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="A"]
+  - [keycode=1048607,x=74,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="S"]
+  - [keycode=1048608,x=76,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="D"]
+  - [keycode=1048609,x=78,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F"]
+  - [keycode=1048610,x=80,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="G"]
+  - [keycode=1048611,x=82,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="H"]
+  - [keycode=1048612,x=84,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="J"]
+  - [keycode=1048613,x=86,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="K"]
+  - [keycode=1048614,x=88,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="L"]
+  - [keycode=1048615,x=90,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name=";"]
+  - [keycode=1048616,x=92,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="""]
+  - [keycode=1048604,x=94,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="ENTER"]
+  - [keycode=1048581,x=96,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_4"]
+  - [keycode=1048582,x=98,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_5"]
+  - [keycode=1048583,x=100,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_6"]
+  - [keycode=1052238,x=102,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_+"]
+  - [keycode=1048591,x=104,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Tab"]
+  - [keycode=1048592,x=106,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Q"]
+  - [keycode=1048593,x=108,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="W"]
+  - [keycode=1048594,x=110,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="E"]
+  - [keycode=1048595,x=112,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="R"]
+  - [keycode=1048596,x=114,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="T"]
+  - [keycode=1048597,x=116,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Y"]
+  - [keycode=1048598,x=118,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="U"]
+  - [keycode=1048599,x=120,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="I"]
+  - [keycode=1048600,x=122,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="O"]
+  - [keycode=1048601,x=124,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="P"]
+  - [keycode=1048602,x=126,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="("]
+  - [keycode=1048603,x=128,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name=")"]
+  - [keycode=1048619,x=130,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="\"]
+  - [keycode=1052243,x=132,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Delete"]
+  - [keycode=1052239,x=134,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="End"]
+  - [keycode=1052241,x=136,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Page Down"]
+  - [keycode=1048584,x=138,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_7"]
+  - [keycode=1048585,x=140,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_8"]
+  - [keycode=1048586,x=142,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_9"]
+  - [keycode=1048617,x=144,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="'"]
+  - [keycode=1048578,x=146,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="1"]
+  - [keycode=1048579,x=148,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="2"]
+  - [keycode=1048580,x=150,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="3"]
+  - [keycode=1048581,x=152,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="4"]
+  - [keycode=1048582,x=154,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="5"]
+  - [keycode=1048583,x=156,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="6"]
+  - [keycode=1048584,x=158,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="7"]
+  - [keycode=1048585,x=160,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="8"]
+  - [keycode=1048586,x=162,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="9"]
+  - [keycode=1048587,x=164,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="0"]
+  - [keycode=1048588,x=166,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="-"]
+  - [keycode=1048589,x=168,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="="]
+  - [keycode=1048590,x=170,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="BKSP"]
+  - [keycode=1052242,x=172,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Insert"]
+  - [keycode=1052231,x=174,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Home"]
+  - [keycode=1052233,x=176,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Page Up"]
+  - [keycode=1048645,x=178,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Num Lock"]
+  - [keycode=1048629,x=180,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_/"]
+  - [keycode=1052215,x=182,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_*"]
+  - [keycode=1052234,x=184,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_-"]
+  - [keycode=1048577,x=186,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Esc"]
+  - [keycode=1048635,x=188,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F1"]
+  - [keycode=1048636,x=190,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F2"]
+  - [keycode=1048637,x=192,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F3"]
+  - [keycode=1048638,x=194,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F4"]
+  - [keycode=1048639,x=196,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F5"]
+  - [keycode=1048640,x=198,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F6"]
+  - [keycode=1048641,x=200,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F7"]
+  - [keycode=1048642,x=202,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F8"]
+  - [keycode=1048643,x=204,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F9"]
+  - [keycode=1048644,x=206,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F10"]
+  - [keycode=1048663,x=208,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F11"]
+  - [keycode=1048664,x=210,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="F12"]
+  - [keycode=1052215,x=212,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="NUMPAD_*"]
+  - [keycode=1048646,x=214,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Scroll Lock"]
+  - [keycode=1052229,x=216,y=0,width=2,height=3,mode=VERTICAL,bImg=null,visible=true,name="Pause"]

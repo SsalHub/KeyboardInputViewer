@@ -63,4 +63,9 @@ public final class TotPanel extends BasePanel{
 	protected RenderingMode getRenderingMode(){
 		return Main.config.tot_mode;
 	}
+	
+	@Override
+	protected String getBindImg() {
+		return Main.config.tot_bImg;
+	}
 }

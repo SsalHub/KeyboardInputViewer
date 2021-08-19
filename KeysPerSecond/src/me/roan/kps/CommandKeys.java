@@ -2,6 +2,7 @@ package me.roan.kps;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.lang.annotation.Native;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -49,6 +50,17 @@ public class CommandKeys{
 	 * Right modifier variant mask (eg. Right shift)
 	 */
 	public static final int RIGHT_MASK = 0b1000_00000000_00000000;
+	
+	public static final int LC_UNKNOWN_MASK = 0b0000_0000_00000000_00000000;
+	
+	public static final int LC_STANDARD_MASK = 0b0001_0000_00000000_00000000;
+	
+	public static final int LC_LEFT_MASK = 0b0010_0000_00000000_00000000;
+	
+	public static final int LC_RIGHT_MASK = 0b0100_0000_00000000_00000000;
+	
+	public static final int LC_NUMPAD_MASK = 0b1000_0000_00000000_00000000;
+	
 	/**
 	 * Mouse button mask
 	 */
@@ -86,8 +98,8 @@ public class CommandKeys{
 	 * @param code The key code to get the extended key code for
 	 * @return The extended key code for this code
 	 */
-	protected static final int getExtendedKeyCode(int code){
-		return getExtendedKeyCode(code, isShiftDown, isCtrlDown, isAltDown);
+	protected static final int getExtendedKeyCode(int code, int location){
+		return getExtendedKeyCode(code, location, isShiftDown, isCtrlDown, isAltDown);
 	}
 	
 	/**
@@ -99,17 +111,32 @@ public class CommandKeys{
 	 * @param alt If alt is involved
 	 * @return The extended key code for this event
 	 */
-	protected static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
+	protected static final int getExtendedKeyCode(int code, int location, boolean shift, boolean ctrl, boolean alt){
+		int location_mask;
+		switch(location) {
+		case NativeKeyEvent.KEY_LOCATION_UNKNOWN:
+			location_mask = LC_UNKNOWN_MASK; break;
+		case NativeKeyEvent.KEY_LOCATION_STANDARD:
+			location_mask = LC_STANDARD_MASK; break;
+		case NativeKeyEvent.KEY_LOCATION_LEFT:
+			location_mask = LC_LEFT_MASK; break;
+		case NativeKeyEvent.KEY_LOCATION_RIGHT:
+			location_mask = LC_RIGHT_MASK; break;
+		case NativeKeyEvent.KEY_LOCATION_NUMPAD:
+			location_mask = LC_NUMPAD_MASK; break;
+		default:
+			location_mask = 0;
+		}
 		if(code == NativeKeyEvent.VC_SHIFT){
-			return LSHIFT;
+			return LSHIFT | location_mask;
 		}else if(code == VC_RSHIFT){
-			return RSHIFT;
+			return RSHIFT | location_mask;
 		}else if(code == NativeKeyEvent.VC_CONTROL){
-			return CTRL;
+			return CTRL | location_mask;
 		}else if(code == NativeKeyEvent.VC_ALT){
-			return ALT;
+			return ALT | location_mask;
 		}else{
-			return code | (shift ? SHIFT_MASK : 0) | (ctrl ? CTRL_MASK : 0) | (alt ? ALT_MASK : 0) | FORMAT_MASK;
+			return code | (shift ? SHIFT_MASK : 0) | (ctrl ? CTRL_MASK : 0) | (alt ? ALT_MASK : 0) | FORMAT_MASK | location_mask;
 		}
 	}
 	
@@ -199,6 +226,8 @@ public class CommandKeys{
 		 * Key code
 		 */
 		private final int keycode;
+		
+		private final int keyLocation;
 
 		/**
 		 * Constructs a new command key
@@ -206,10 +235,11 @@ public class CommandKeys{
 		 * @param alt Whether or not alt has to be pressed
 		 * @param ctrl Whether or not ctrl has to be pressed
 		 */
-		protected CMD(int keycode, boolean alt, boolean ctrl){
+		protected CMD(int keycode, int keyLocation, boolean alt, boolean ctrl){
 			this.alt = alt;
 			this.ctrl = ctrl;
 			this.keycode = keycode;
+			this.keyLocation = keyLocation;
 		}
 
 		/**
@@ -224,7 +254,7 @@ public class CommandKeys{
 
 		@Override
 		public String toString(){
-			return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + NativeKeyEvent.getKeyText(keycode);
+			return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + NativeKeyEvent.getKeyText(keycode, keyLocation);
 		}
 
 		/**
@@ -257,7 +287,7 @@ public class CommandKeys{
 			if(Main.lastevent == null){
 				return null;
 			}
-			CMD cmd = new CMD(Main.lastevent.getKeyCode(), isAltDown || alt.isSelected(), isCtrlDown || ctrl.isSelected());
+			CMD cmd = new CMD(Main.lastevent.getKeyCode(), Main.lastevent.getKeyLocation(), isAltDown || alt.isSelected(), isCtrlDown || ctrl.isSelected());
 			if(Dialog.showConfirmDialog("Set command key to: " + cmd.toString())){
 				return cmd;
 			}

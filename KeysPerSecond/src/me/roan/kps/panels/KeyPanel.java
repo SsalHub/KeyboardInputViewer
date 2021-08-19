@@ -26,6 +26,8 @@ public final class KeyPanel extends BasePanel{
 	 * for this key
 	 */
 	protected KeyInformation info;
+	
+	private String bImg;
 
 	/**
 	 * Constructs a new KeyPanel
@@ -80,5 +82,10 @@ public final class KeyPanel extends BasePanel{
 	@Override
 	protected RenderingMode getRenderingMode(){
 		return info.getRenderingMode();
+	}
+
+	@Override
+	protected String getBindImg() {
+		return info.getBindingImg();
 	}
 }

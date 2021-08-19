@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.IllegalComponentStateException;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
@@ -35,15 +36,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+import javax.print.Doc;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -100,6 +104,7 @@ import me.roan.util.Util;
  * @author Roan
  */
 public class Main{
+	protected static String version = "1.0";
 	/**
 	 * The number of seconds the average has
 	 * been calculated for
@@ -150,7 +155,7 @@ public class Main{
 	/**
 	 * The program's main frame
 	 */
-	protected static final JFrame frame = new JFrame("KeysPerSecond");
+	protected static final JFrame frame = new JFrame("KeyboardInputViewer");
 	/**
 	 * Whether or not the counter is paused
 	 */
@@ -170,7 +175,7 @@ public class Main{
 	/**
 	 * Frame for the graph
 	 */
-	protected static JFrame graphFrame = new JFrame("KeysPerSecond");
+	protected static JFrame graphFrame = new JFrame("KeyboardInputViewer");
 	/**
 	 * The layout for the main panel of the program
 	 */
@@ -191,6 +196,8 @@ public class Main{
 	 * Dummy key for getOrDefault operations
 	 */
 	private static final Key DUMMY_KEY;
+	
+	
 	/**
 	 * Best text rendering hints.
 	 */
@@ -222,7 +229,8 @@ public class Main{
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
 		Dialog.setParentFrame(frame);
-		Dialog.setDialogTitle("Keys per second");
+		Dialog.setDialogTitle("KeyboardInputViewer");
+		VersionControl.setParentFrame(frame);
 
 		//Make sure the native hook is always unregistered
 		Runtime.getRuntime().addShutdownHook(new Thread(){
@@ -238,6 +246,7 @@ public class Main{
 
 		//Initialise native library and register event handlers
 		setupNativeHook();
+		
 
 		//Set configuration for the keys
 		if(config != null){
@@ -442,13 +451,20 @@ public class Main{
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		Integer code = getExtendedKeyCode(nevent);
+		Integer keyLocation;
+		try {
+			keyLocation = ((NativeKeyEvent)nevent).getKeyLocation();
+		} catch(java.lang.ClassCastException e){
+			keyLocation = 0;
+		}
 		if(!keys.containsKey(code)){
 			if(config.trackAllKeys && nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code)));
+				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode(), keyLocation), code, keyLocation)));
 			}else if(config.trackAllButtons && nevent instanceof NativeMouseEvent){
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
 		}
+		
 		if(!suspended && keys.containsKey(code)){
 			Key key = keys.get(code);
 			key.keyPressed();
@@ -507,9 +523,9 @@ public class Main{
 		if(event instanceof NativeKeyEvent){
 			NativeKeyEvent key = (NativeKeyEvent)event;
 			if(!config.enableModifiers){
-				return CommandKeys.getExtendedKeyCode(key.getKeyCode(), false, false, false);
+				return CommandKeys.getExtendedKeyCode(key.getKeyCode(), key.getKeyLocation(), false, false, false);
 			}else{
-				return CommandKeys.getExtendedKeyCode(key.getKeyCode());
+				return CommandKeys.getExtendedKeyCode(key.getKeyCode(), key.getKeyLocation());
 			}
 		}else{
 			return -((NativeMouseEvent)event).getButton();
@@ -548,9 +564,9 @@ public class Main{
 		JCheckBox callButtons = new JCheckBox();
 		JCheckBox ctot = new JCheckBox();
 		JCheckBox cmod = new JCheckBox();
-		cmax.setSelected(true);
-		cavg.setSelected(true);
-		ccur.setSelected(true);
+		//cmax.setSelected(true);
+		//cavg.setSelected(true);
+		//ccur.setSelected(true);
 		ckey.setSelected(true);
 		JLabel lmax = new JLabel("Show maximum: ");
 		JLabel lavg = new JLabel("Show average: ");
@@ -663,6 +679,8 @@ public class Main{
 		form.add(all, BorderLayout.CENTER);
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(false);
+			LayoutDialog.parent = frame;
+			LayoutDialog.live = false;
 		});
 		cmdkeys.addActionListener((e)->{
 			configureCommandKeys();
@@ -714,7 +732,9 @@ public class Main{
 			}
 		});
 		addkey.addActionListener((e)->{
-			KeysDialog.configureKeys();
+			//KeysDialog.configureKeys();
+			if(config.keyinfo.isEmpty()) KeysDialog.selectKeyMode();
+			else KeysDialog.configureKeys();
 		});
 		color.addActionListener((e)->{
 			configureColors();
@@ -781,16 +801,42 @@ public class Main{
 		autoSave.addActionListener((e)->{
 			Statistics.configureAutoSave(false);
 		});
-		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		info.add(Util.getVersionLabel("KeysPerSecond", "v8.4"));//XXX the version number  - don't forget build.gradle
-		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
-		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
-		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
-		links.add(forum);
-		links.add(git);
-		forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
-		git.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
-		info.add(links);
+		//JPanel info = new JPanel(new GridLayout(2, 1, -2, 2));
+		JPanel info = new JPanel(new BorderLayout());
+		String repos = "KeyboardInputViewer";
+		String currentVer = version;
+		//info.add(Util.getVersionLabel("KeysPerSecond", "v1.0"));//XXX the version number  - don't forget build.gradle
+		//JLabel version = new JLabel("<html><center><i>Version: " + nowVersion + "</i></center></html>");
+		VersionControl.setDialogIcon(iconSmall);
+		info.add(VersionControl.getVersionLabel(repos, currentVer), BorderLayout.PAGE_START);
+		
+		JButton thxBtn = new JButton("Special Thanks");
+		thxBtn.addActionListener((e)->{
+			String RoanH = new String("<p>Original Program Developer :<br><b>RoanH</b></p>");
+			//String jegalryang = new String("<p>Resource Provided :<br><b>제갈량</b></p>");
+			//String doctor48 = new String("<p>Resource Edited :<br><b>박사48</b></p>");
+			String s = String.format("<html><left>%s</left></html>", RoanH);
+			JLabel thxList = new JLabel(s);
+			
+			JDialog thxDialog = new JOptionPane(thxList, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {}, 0).createDialog("Special Thanks");
+
+			thxDialog.setIconImage(iconSmall);
+			thxDialog.setVisible(true);
+		});
+		info.add(thxBtn, BorderLayout.CENTER);
+		
+		//info.add(version, BorderLayout.PAGE_START);
+		JPanel links = new JPanel(new GridLayout(2, 1, -2, 0));
+		//JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font></html>", SwingConstants.CENTER);
+		JLabel originalGit = new JLabel("<html><font color=blue><u>Original_GitHub</u></font></html>", SwingConstants.CENTER);
+		JLabel modifierGit = new JLabel("<html><font color=blue><u>KIV_GitHub</u></font></html>", SwingConstants.CENTER);
+		//forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
+		originalGit.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
+		modifierGit.addMouseListener(new ClickableLink("https://github.com/SsalHub/KeyboardInputViewer"));
+		//links.add(forum);
+		links.add(originalGit);
+		links.add(modifierGit);
+		info.add(links, BorderLayout.PAGE_END);
 		form.add(info, BorderLayout.PAGE_END);
 		
 		JButton ok = new JButton("OK");
@@ -810,7 +856,7 @@ public class Main{
 		
 		dialog.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
-		JFrame conf = new JFrame("KeysPerSecond");
+		JFrame conf = new JFrame("Keyboard Input Viewer");
 		conf.add(dialog);
 		conf.pack();
 		conf.setResizable(false);
@@ -1019,7 +1065,12 @@ public class Main{
 		frame.setResizable(false);
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(true);
+		try {
+			frame.setUndecorated(true);
+		} catch(IllegalComponentStateException e) {
+			frame.dispose();
+			frame.setUndecorated(true);
+		}
 		new Listener(frame);
 		graphFrame.setResizable(false);
 		graphFrame.setIconImage(icon);
@@ -1047,7 +1098,12 @@ public class Main{
 			int panels = 0;
 			for(KeyInformation i : config.keyinfo){
 				if(!keys.containsKey(i.keycode)){
-					keys.put(i.keycode, k = new Key(i.name));
+					k = new Key(i.name);
+					if(isNumpadKey(i.keycode)) {
+						//System.out.println("code : " + i.keycode);
+						setNumpadKey(i.keycode, k);
+					}
+					keys.put(i.keycode, k);
 					k.alt = CommandKeys.hasAlt(i.keycode);
 					k.ctrl = CommandKeys.hasCtrl(i.keycode);
 					k.shift = CommandKeys.hasShift(i.keycode);
@@ -1119,6 +1175,106 @@ public class Main{
 				frame.setVisible(false);
 			}
 		});
+	}
+	
+	private static final boolean isNumpadKey(int keycode) {
+		switch(keycode) {
+		// NUMPAD_.
+		case 9437267:
+		case 1052243:
+		// NUMPAD_0
+		case 9437195:
+		case 1052242:
+		// NUMPAD_1
+		case 9437186:
+		case 1052239:
+		// NUMPAD_2
+		case 9437187:
+		case 1106000:
+		// NUMPAD_3
+		case 9437188:
+		case 1052241:
+		// NUMPAD_4
+		case 9437189:
+		case 1105995:
+		// NUMPAD_5
+		case 9437190:
+		case 1105996:
+		// NUMPAD_6
+		case 9437191:
+		case 1105997:
+		// NUMPAD_7
+		case 9437192:
+		case 1052231:
+		// NUMPAD_8
+		case 9437193:
+		case 1105992:
+		// NUMPAD_9
+		case 9437194:
+		case 1052233:
+			return true;
+		default:
+			return false;
+		}
+	}
+	private static void setNumpadKey(int keycode, Key k) {
+		switch(keycode) {
+		// NUMPAD_.
+		case 9437267:
+			keys.put(1052243, k); break;
+		case 1052243:
+			keys.put(9437267, k); break;
+		// NUMPAD_0
+		case 9437195:
+			keys.put(1052242, k); break;
+		case 1052242:
+			keys.put(9437195, k); break;
+		// NUMPAD_1
+		case 9437186:
+			keys.put(1052239, k); break;
+		case 1052239:
+			keys.put(9437186, k); break;
+		// NUMPAD_2
+		case 9437187:
+			keys.put(1106000, k); break;
+		case 1106000:
+			keys.put(9437187, k); break;
+		// NUMPAD_3
+		case 9437188:
+			keys.put(1052241, k); break;
+		case 1052241:
+			keys.put(9437188, k); break;
+		// NUMPAD_4
+		case 9437189:
+			keys.put(1105995, k); break;
+		case 1105995:
+			keys.put(9437189, k); break;
+		// NUMPAD_5
+		case 9437190:
+			keys.put(1105996, k); break;
+		case 1105996:
+			keys.put(9437190, k); break;
+		// NUMPAD_6
+		case 9437191:
+			keys.put(1105997, k); break;
+		case 1105997:
+			keys.put(9437191, k); break;
+		// NUMPAD_7
+		case 9437192:
+			keys.put(1052231, k); break;
+		case 1052231:
+			keys.put(9437192, k); break;
+		// NUMPAD_8
+		case 9437193:
+			keys.put(1105992, k); break;
+		case 1105992:
+			keys.put(9437193, k); break;
+		// NUMPAD_9
+		case 9437194:
+			keys.put(1052233, k); break;
+		case 1052233:
+			keys.put(9437194, k); break;
+		}
 	}
 
 	/**
@@ -1231,7 +1387,7 @@ public class Main{
 		 * Called when a key is pressed
 		 */
 		protected void keyPressed(){
-			if(!down){
+			if(!down && !name.equals("Right Alt") && !name.equals("Right Ctrl")){
 				count++;
 				down = true;
 				tmp.incrementAndGet();
@@ -1269,12 +1425,15 @@ public class Main{
 		 * The name of this key
 		 * @see Key#name
 		 */
+		
 		public String name;
 		/**
 		 * The virtual key code of this key<br>
 		 * This code represents the key
 		 */
 		public int keycode;
+		
+		public int keyLocation;
 		/**
 		 * Whether or not this key is displayed
 		 */
@@ -1286,19 +1445,19 @@ public class Main{
 		/**
 		 * The x position of this panel in the layout
 		 */
-		protected int x = autoIndex += 2;
+		public int x = autoIndex += 2;
 		/**
 		 * The y postion of this panel in the layout
 		 */
-		protected int y = 0;
+		public int y = 0;
 		/**
 		 * The width of this panel in the layout
 		 */
-		protected int width = 2;
+		public int width = 2;
 		/**
 		 * The height of this panel in the layout
 		 */
-		protected int height = 3;
+		public int height = 2;
 		/**
 		 * The text rendering mode for this panel
 		 */
@@ -1316,9 +1475,13 @@ public class Main{
 		 * @see #name
 		 * @see #keycode 
 		 */
-		public KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
-			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
-			this.name = mouse ? name : getKeyName(name, keycode);
+		
+		protected String bImg = null;
+		
+		public KeyInformation(String name, int code, int location, boolean alt, boolean ctrl, boolean shift, boolean mouse){
+			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, location, shift, ctrl, alt);
+			this.keyLocation = location;
+			this.name = mouse ? name : getKeyName(name, keycode, keyLocation);
 		}
 
 		/**
@@ -1328,8 +1491,8 @@ public class Main{
 		 * @param code The virtual key code of the key
 		 * @return The full name of this given key
 		 */
-		private static final String getKeyName(String name, int code){
-			return ((CommandKeys.hasAlt(code) ? "a" : "") + (CommandKeys.hasCtrl(code) ? "c" : "") + (CommandKeys.hasShift(code) ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
+		private static final String getKeyName(String name, int code, int location){
+			return ((CommandKeys.hasAlt(code) ? "a" : "") + (CommandKeys.hasCtrl(code) ? "c" : "") + (CommandKeys.hasShift(code) ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK, location));
 		}
 
 		/**
@@ -1341,9 +1504,10 @@ public class Main{
 		 * @see #name
 		 * @see #keycode
 		 */
-		protected KeyInformation(String name, int code, boolean visible){
+		protected KeyInformation(String name, int code, int location, boolean visible){
 			this.name = name;
 			this.keycode = code;
+			this.keyLocation = location;
 			this.visible = visible;
 		}
 		
@@ -1357,7 +1521,8 @@ public class Main{
 		 */
 		public void setName(String name){
 			this.name = name;
-			keys.getOrDefault(keycode, DUMMY_KEY).name = name;
+			Integer code = keycode + keyLocation * 10000000;
+			keys.getOrDefault(code, DUMMY_KEY).name = name;
 		}
 
 		/**
@@ -1371,7 +1536,7 @@ public class Main{
 
 		@Override
 		public String toString(){
-			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",name=\"" + name + "\"]";
+			return "[keycode=" + keycode + ",keyLocation=" + keyLocation + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name()  + ",bImg=" + bImg + ",visible=" + visible + ",name=\"" + name + "\"]";
 		}
 
 		@Override
@@ -1381,7 +1546,7 @@ public class Main{
 
 		@Override
 		public boolean equals(Object other){
-			return other instanceof KeyInformation && keycode == ((KeyInformation)other).keycode;
+			return other instanceof KeyInformation && keycode == ((KeyInformation)other).keycode && keyLocation == ((KeyInformation)other).keyLocation;
 		}
 
 		/**
@@ -1398,7 +1563,7 @@ public class Main{
 			width = 2;
 			height = 3;
 			mode = RenderingMode.VERTICAL;
-			keycode = CommandKeys.getExtendedKeyCode(keycode, false, false, false);
+			keycode = CommandKeys.getExtendedKeyCode(keycode, keyLocation, false, false, false);
 		}
 
 		/**
@@ -1406,128 +1571,212 @@ public class Main{
 		 * @param keyCode The key code
 		 * @return The key name
 		 */
-		public static String getKeyText(int keyCode){
-			switch(keyCode){
-			case NativeKeyEvent.VC_ESCAPE:
-				return "Esc";
-			// Begin Function Keys
-			case NativeKeyEvent.VC_F1:
-				return "F1";
-			case NativeKeyEvent.VC_F2:
-				return "F2";
-			case NativeKeyEvent.VC_F3:
-				return "F3";
-			case NativeKeyEvent.VC_F4:
-				return "F4";
-			case NativeKeyEvent.VC_F5:
-				return "F5";
-			case NativeKeyEvent.VC_F6:
-				return "F6";
-			case NativeKeyEvent.VC_F7:
-				return "F7";
-			case NativeKeyEvent.VC_F8:
-				return "F8";
-			case NativeKeyEvent.VC_F9:
-				return "F9";
-			case NativeKeyEvent.VC_F10:
-				return "F10";
-			case NativeKeyEvent.VC_F11:
-				return "F11";
-			case NativeKeyEvent.VC_F12:
-				return "F12";
-			case NativeKeyEvent.VC_F13:
-				return "F13";
-			case NativeKeyEvent.VC_F14:
-				return "F14";
-			case NativeKeyEvent.VC_F15:
-				return "F15";
-			case NativeKeyEvent.VC_F16:
-				return "F16";
-			case NativeKeyEvent.VC_F17:
-				return "F17";
-			case NativeKeyEvent.VC_F18:
-				return "F18";
-			case NativeKeyEvent.VC_F19:
-				return "F19";
-			case NativeKeyEvent.VC_F20:
-				return "F20";
-			case NativeKeyEvent.VC_F21:
-				return "F21";
-			case NativeKeyEvent.VC_F22:
-				return "F22";
-			case NativeKeyEvent.VC_F23:
-				return "F23";
-			case NativeKeyEvent.VC_F24:
-				return "F24";
-			// Begin Alphanumeric Zone
-			case NativeKeyEvent.VC_BACKQUOTE:
-				return "'";
-			case NativeKeyEvent.VC_MINUS:
-				return "-";
-			case NativeKeyEvent.VC_EQUALS:
-				return "=";
-			case NativeKeyEvent.VC_BACKSPACE:
-				return "\u2190";
-			case NativeKeyEvent.VC_TAB:
-				return "Tab";
-			case NativeKeyEvent.VC_CAPS_LOCK:
-				return "Cap";
-			case NativeKeyEvent.VC_OPEN_BRACKET:
-				return "(";
-			case NativeKeyEvent.VC_CLOSE_BRACKET:
-				return ")";
-			case NativeKeyEvent.VC_BACK_SLASH:
-				return "\\";
-			case NativeKeyEvent.VC_SEMICOLON:
-				return ";";
-			case NativeKeyEvent.VC_QUOTE:
-				return "\"";
-			case NativeKeyEvent.VC_ENTER:
-				return "\u21B5";
-			case NativeKeyEvent.VC_COMMA:
-				return ",";
-			case NativeKeyEvent.VC_PERIOD:
-				return ".";
-			case NativeKeyEvent.VC_SLASH:
-				return "/";
-			case NativeKeyEvent.VC_SPACE:
-				return " ";
-			// Begin Edit Key Zone
-			case NativeKeyEvent.VC_INSERT:
-				return "Ins";
-			case NativeKeyEvent.VC_DELETE:
-				return "Del";
-			case NativeKeyEvent.VC_HOME:
-				return "\u2302";
-			case NativeKeyEvent.VC_END:
-				return "End";
-			case NativeKeyEvent.VC_PAGE_UP:
-				return "\u2191";
-			case NativeKeyEvent.VC_PAGE_DOWN:
-				return "\u2193";
-			// Begin Cursor Key Zone
-			case NativeKeyEvent.VC_UP:
-				return "\u25B4";
-			case NativeKeyEvent.VC_LEFT:
-				return "\u25C2";
-			case NativeKeyEvent.VC_CLEAR:
-				return "Clr";
-			case NativeKeyEvent.VC_RIGHT:
-				return "\u25B8";
-			case NativeKeyEvent.VC_DOWN:
-				return "\u25BE";
-			// Begin Modifier and Control Keys
-			case NativeKeyEvent.VC_SHIFT:
-			case CommandKeys.VC_RSHIFT:
-				return "\u21D1";
-			case NativeKeyEvent.VC_CONTROL:
-				return "Ctl";
-			case NativeKeyEvent.VC_ALT:
-				return "Alt";
-			case NativeKeyEvent.VC_META:
-				return "\u2318";
+		public static String getKeyText(int keyCode, int keyLocation){
+			switch(keyLocation) {
+			case NativeKeyEvent.KEY_LOCATION_STANDARD:
+				switch(keyCode){
+				case NativeKeyEvent.VC_ESCAPE:
+					return "Esc";
+				// Begin Function Keys
+				case NativeKeyEvent.VC_F1:
+					return "F1";
+				case NativeKeyEvent.VC_F2:
+					return "F2";
+				case NativeKeyEvent.VC_F3:
+					return "F3";
+				case NativeKeyEvent.VC_F4:
+					return "F4";
+				case NativeKeyEvent.VC_F5:
+					return "F5";
+				case NativeKeyEvent.VC_F6:
+					return "F6";
+				case NativeKeyEvent.VC_F7:
+					return "F7";
+				case NativeKeyEvent.VC_F8:
+					return "F8";
+				case NativeKeyEvent.VC_F9:
+					return "F9";
+				case NativeKeyEvent.VC_F10:
+					return "F10";
+				case NativeKeyEvent.VC_F11:
+					return "F11";
+				case NativeKeyEvent.VC_F12:
+					return "F12";
+				case NativeKeyEvent.VC_F13:
+					return "F13";
+				case NativeKeyEvent.VC_F14:
+					return "F14";
+				case NativeKeyEvent.VC_F15:
+					return "F15";
+				case NativeKeyEvent.VC_F16:
+					return "F16";
+				case NativeKeyEvent.VC_F17:
+					return "F17";
+				case NativeKeyEvent.VC_F18:
+					return "F18";
+				case NativeKeyEvent.VC_F19:
+					return "F19";
+				case NativeKeyEvent.VC_F20:
+					return "F20";
+				case NativeKeyEvent.VC_F21:
+					return "F21";
+				case NativeKeyEvent.VC_F22:
+					return "F22";
+				case NativeKeyEvent.VC_F23:
+					return "F23";
+				case NativeKeyEvent.VC_F24:
+					return "F24";
+				case 3663 :
+					return "NUMPAD_1";
+				case 57424:
+					return "NUMPAD_2";
+				case 3665 :
+					return "NUMPAD_3";
+				case 57419:
+					return "NUMPAD_4";
+				case 57420:
+					return "NUMPAD_5";
+				case 57421:
+					return "NUMPAD_6";
+				case 3655 :
+					return "NUMPAD_7";
+				case 57416:
+					return "NUMPAD_8";
+				case 3657 :
+					return "NUMPAD_9";
+				case 3666 :
+					return "NUMPAD_0";
+				case 3667 :
+					return "NUMPAD_.";
+				case 3639 :
+					return "Print Screenshot";
+				// Begin Alphanumeric Zone
+				case NativeKeyEvent.VC_BACKQUOTE:
+					return "'";
+				case NativeKeyEvent.VC_MINUS:
+					return "-";
+				case NativeKeyEvent.VC_EQUALS:
+					return "=";
+				case NativeKeyEvent.VC_BACKSPACE:
+					return "BKSP";
+				case NativeKeyEvent.VC_TAB:
+					return "Tab";
+				case NativeKeyEvent.VC_CAPS_LOCK:
+					return "Cap";
+				case NativeKeyEvent.VC_OPEN_BRACKET:
+					return "(";
+				case NativeKeyEvent.VC_CLOSE_BRACKET:
+					return ")";
+				case NativeKeyEvent.VC_BACK_SLASH:
+					return "\\";
+				case NativeKeyEvent.VC_SEMICOLON:
+					return ";";
+				case NativeKeyEvent.VC_QUOTE:
+					return "\"";
+				case NativeKeyEvent.VC_ENTER:
+					return "ENTER";
+				case NativeKeyEvent.VC_COMMA:
+					return "comma";
+				case NativeKeyEvent.VC_PERIOD:
+					return ".";
+				case NativeKeyEvent.VC_SLASH:
+					return "/";
+				case NativeKeyEvent.VC_SPACE:
+					return "SP";
+				case NativeKeyEvent.VC_KATAKANA:
+					return "Right Alt";
+				case NativeKeyEvent.VC_KANJI:
+					return "Right Ctrl";
+				// Begin Modifier and Control Keys
+				case NativeKeyEvent.VC_SHIFT:
+				case CommandKeys.VC_RSHIFT:
+					return "\u21D1";
+				case NativeKeyEvent.VC_CONTROL:
+					return "CTRL";
+				case NativeKeyEvent.VC_ALT:
+					return "ALT";
+				case NativeKeyEvent.VC_META:
+					return "\u2318";
+				case NativeKeyEvent.VC_0:
+					return "0";
+				case NativeKeyEvent.VC_1:
+					return "1";
+				case NativeKeyEvent.VC_2:
+					return "2";
+				case NativeKeyEvent.VC_3:
+					return "3";
+				case NativeKeyEvent.VC_4:
+					return "4";
+				case NativeKeyEvent.VC_5:
+					return "5";
+				case NativeKeyEvent.VC_6:
+					return "6";
+				case NativeKeyEvent.VC_7:
+					return "7";
+				case NativeKeyEvent.VC_8:
+					return "8";
+				case NativeKeyEvent.VC_9:
+					return "9";
+					
+				}
+			case NativeKeyEvent.KEY_LOCATION_NUMPAD:
+				switch(keyCode) {
+				case 69 :
+					return "Num Lock";
+				case 53 :
+					return "NUMPAD_/";
+				case 3639 :
+					return "NUMPAD_*";
+				case 3658 :
+					return "NUMPAD_-";
+				case 3662 :
+					return "NUMPAD_+";
+				case 28 :
+					return "NUMPAD_Enter";
+				case 83:
+					return "NUMPAD_.";
+				case 3655 :
+					return "Home";
+				case 3657 :
+					return "Page Up";
+				case 3663 :
+					return "End";
+				case 3665 :
+					return "Page Down";
+				case 3666 :
+					return "Insert";
+				case 3667 :
+					return "Delete";
+				case 57416 :
+					return Toolkit.getProperty("AWT.up", "Up");
+				case 57419 :
+					return Toolkit.getProperty("AWT.left", "Left");
+				case 57420 :
+					return Toolkit.getProperty("AWT.clear", "Clear");
+				case 57421 :
+					return Toolkit.getProperty("AWT.right", "Right");
+				case 57424 :
+					return Toolkit.getProperty("AWT.down", "Down");
+				}
+				
+			case NativeKeyEvent.KEY_LOCATION_LEFT:
+				switch(keyCode){
+				case 29 :
+					return "Ctrl";
+				case 42 :
+					return "Shift";
+				case 56 :
+					return "Alt";
+				case 3675 :
+					return "Windows";
+				}
+			case NativeKeyEvent.KEY_LOCATION_RIGHT:
+				switch (keyCode) {
+				case 3638 :
+					return "Right Shift";
+			}
 			default:
-				return NativeKeyEvent.getKeyText(keyCode);
+				return NativeKeyEvent.getKeyText(keyCode, keyLocation);
 			}
 		}
 
@@ -1584,6 +1833,16 @@ public class Main{
 		@Override
 		public void setRenderingMode(RenderingMode mode){
 			this.mode = mode;
+		}
+		
+		@Override
+		public String getBindingImg() {
+			return bImg;
+		}
+		
+		@Override
+		public void setBindingImg(String bImg) {
+			this.bImg = bImg;
 		}
 	}
 	

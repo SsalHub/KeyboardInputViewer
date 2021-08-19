@@ -1,12 +1,24 @@
 package me.roan.kps;
 
+import java.awt.AlphaComposite;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import me.roan.kps.panels.BasePanel;
+import me.roan.kps.ui.dialog.LayoutDialog.BindImgDialog;
 
 /**
  * An enum specifying the different
@@ -15,6 +27,106 @@ import me.roan.kps.panels.BasePanel;
  */
 public enum RenderingMode{
 	/**
+	 * Only text rendering except value
+	 */
+	ONLY_T("Only Text"){
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 5) / 8 + 1);
+		}
+		
+		// not necessary
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
+		}
+		
+		// not necessary
+		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			point.move(Main.config.borderOffset + insideOffset, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel)) / 8 + 1);
+		}
+		
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 11) / 32;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel);
+		}
+		
+		// not necessary
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return 0;
+		}
+	},
+	
+	ONLY_IMAGE("Only image"){
+		// not necessary
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
+		}
+		
+		// not necessary
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(0, 0);
+		}
+
+		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(panel)) / 2.0D), Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideHeight(panel) - img.getHeight(panel)) / 2.0D));
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return 0;
+		}
+		
+		// not necessary
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return 0;
+		}
+		
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return getPanelShorterLength(getPanelInsideWidth(panel), getPanelInsideHeight(panel));
+		}
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return getPanelShorterLength(getPanelInsideWidth(panel), getPanelInsideHeight(panel));
+		}
+	}, /**
 	 * HORIZONTAL text rendering
 	 * The text is followed by the value
 	 */
@@ -29,6 +141,12 @@ public enum RenderingMode{
 			point.move(panel.getWidth() - Main.config.borderOffset - insideOffset - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
+		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			//point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(null)/ 2.0D)), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 5) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel)) / 8 + 1);
+		}
+		
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
 			return (getPanelInsideHeight(panel) * 5) / 8;
@@ -47,6 +165,16 @@ public enum RenderingMode{
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
 			return getPanelInsideWidth(panel) / 2;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return 0;
 		}
 	},
 	/**
@@ -65,6 +193,12 @@ public enum RenderingMode{
 		}
 
 		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			//point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(null)/ 2.0D)), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 5) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel)) / 8 + 1);
+		}
+		
+		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
 			return (getPanelInsideHeight(panel) * 5) / 8;
 		}
@@ -83,6 +217,16 @@ public enum RenderingMode{
 		protected int getEffectiveValueWidth(BasePanel panel){
 			return getPanelInsideWidth(panel) / 2;
 		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return 0;
+		}
 	},
 	/**
 	 * DIAGONAL text rendering
@@ -99,6 +243,12 @@ public enum RenderingMode{
 			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 
+		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			//point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(null)/ 2.0D)), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 5) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel)) / 8 + 1);
+		}
+		
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
 			return getPanelInsideHeight(panel) / 2 - 2;
@@ -117,6 +267,16 @@ public enum RenderingMode{
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
 			return getPanelInsideWidth(panel) - 2;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return 0;
 		}
 	},
 	/**
@@ -135,6 +295,12 @@ public enum RenderingMode{
 		}
 
 		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			//point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(null)/ 2.0D)), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 5) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel)) / 8 + 1);
+		}
+		
+		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
 			return getPanelInsideHeight(panel) / 2 - 2;
 		}
@@ -152,6 +318,16 @@ public enum RenderingMode{
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
 			return getPanelInsideWidth(panel) - 2;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return 0;
 		}
 	},
 	/**
@@ -170,6 +346,12 @@ public enum RenderingMode{
 		}
 
 		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			//point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(null)/ 2.0D)), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 5) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel)) / 8 + 1);
+		}
+		
+		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
 			return getPanelInsideHeight(panel) / 2 - 2;
 		}
@@ -187,6 +369,16 @@ public enum RenderingMode{
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
 			return getPanelInsideWidth(panel) - 2;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return 0;
 		}
 	},
 	/**
@@ -205,6 +397,12 @@ public enum RenderingMode{
 		}
 
 		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			//point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(null)/ 2.0D)), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 5) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel)) / 8 + 1);
+		}
+		
+		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
 			return getPanelInsideHeight(panel) / 2 - 2;
 		}
@@ -223,6 +421,16 @@ public enum RenderingMode{
 		protected int getEffectiveValueWidth(BasePanel panel){
 			return getPanelInsideWidth(panel) - 2;
 		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return 0;
+		}
 	},
 	/**
 	 * VERTICAL text rendering
@@ -239,6 +447,13 @@ public enum RenderingMode{
 			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
 		}
 
+		// not neccessary
+		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			//point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(null)/ 2.0D)), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 5) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel)) / 8 + 1);
+		}
+		
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
 			return (getPanelInsideHeight(panel) * 11) / 32;
@@ -258,7 +473,164 @@ public enum RenderingMode{
 		protected int getEffectiveValueWidth(BasePanel panel){
 			return getPanelInsideWidth(panel);
 		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return 0;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return 0;
+		}
+	},
+	
+	VERTICAL_TEXT_WITH_IMAGE("Text above image"){
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
+		}
+		
+		// not necessary
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(0, 0);
+		}
+
+		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(panel)) / 2.0D), Main.config.borderOffset + insideOffset + (int)((getPanelInsideHeight(panel) * 0.7D - img.getHeight(panel) / 2.0D)));
+		}
+		
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 11) / 32;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel);
+		}
+		
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return 0;
+		}
+		
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return (getPanelShorterLength(getPanelInsideWidth(panel), getPanelInsideHeight(panel)) * 11) / 19;
+		}
+		
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return (getPanelShorterLength(getPanelInsideWidth(panel), getPanelInsideHeight(panel)) * 11) / 19;
+		}
+	},
+	
+	VERTICAL_VALUE_WITH_IMAGE("Image above value"){
+		// not necessary
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
+		}
+		
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
+		}
+
+		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(panel)) / 2.0D), Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideHeight(panel) * 0.3D  - img.getHeight(panel) / 2.0D)));
+		}
+		
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return 0;
+		}
+		
+		// not necessary
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 9) / 32;
+		}
+		// not necessary
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel);
+		}
+		
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 9) / 19;
+		}
+		
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 9) / 19;
+		}
+	},
+
+	VERTICAL_TEXT_VALUE_IMAGE("Text above value, image in background"){
+		// not necessary
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
+		}
+		
+		// not necessary
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
+		}
+
+		@Override
+		protected void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img) {
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - img.getWidth(panel)) / 2.0D), Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideHeight(panel) - img.getHeight(panel)) / 2.0D));
+		}
+		
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 11) / 32;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel);
+		}
+		
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 9) / 32;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel);
+		}
+		
+		@Override
+		protected int getEffectiveImgHeight(BasePanel panel){
+			return getPanelShorterLength(getPanelInsideWidth(panel), getPanelInsideHeight(panel));
+		}
+		
+		@Override
+		protected int getEffectiveImgWidth(BasePanel panel){
+			return getPanelShorterLength(getPanelInsideWidth(panel), getPanelInsideHeight(panel));
+		}
 	};
+	
 
 	/**
 	 * The display name of the
@@ -312,6 +684,8 @@ public enum RenderingMode{
 	 * @param value The value that will be drawn
 	 */
 	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value);
+	
+	protected abstract void setBindImgDrawPositionImpl(Graphics2D g, BasePanel panel, Image img);
 
 	/**
 	 * Gets the effective height available to draw the title
@@ -340,6 +714,10 @@ public enum RenderingMode{
 	 * @return The effective width available to draw the value
 	 */
 	protected abstract int getEffectiveValueWidth(BasePanel panel);
+	
+	protected abstract int getEffectiveImgHeight(BasePanel panel);
+	
+	protected abstract int getEffectiveImgWidth(BasePanel panel);
 
 	/**
 	 * Gets the location at which the panel title should be drawn
@@ -373,6 +751,11 @@ public enum RenderingMode{
 		return point;
 	}
 
+	protected Point getBindImgeDrawPosition(Graphics2D g, BasePanel panel, Image img) {
+		setBindImgDrawPositionImpl(g, panel, img);
+		return point;
+	}
+	
 	/**
 	 * Gets the title font that should be used to draw the
 	 * panel title
@@ -398,6 +781,10 @@ public enum RenderingMode{
 	protected Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
 		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont);
 	}
+	
+	protected Image getScaledImg(Image img, Graphics2D g, BasePanel panel) {
+		return scaleImg(img, g, getEffectiveImgWidth(panel) - 1, getEffectiveImgHeight(panel) - 1);
+	}
 
 	/**
 	 * Gets the inside height in pixel of the
@@ -419,6 +806,10 @@ public enum RenderingMode{
 	 */
 	private static final int getPanelInsideWidth(BasePanel panel){
 		return panel.getWidth() - (Main.config.borderOffset + insideOffset) * 2;
+	}
+	
+	private static final int getPanelShorterLength(int w, int h) {
+		return w < h ? w : h;
 	}
 
 	/**
@@ -451,6 +842,12 @@ public enum RenderingMode{
 		}while(!(getHeight(g, font) <= maxHeight && stringWidth(text, fm) <= maxWidth));
 
 		return font;
+	}
+	
+	private static final Image scaleImg(Image img, Graphics2D g, int imgWidth, int imgHeight) {
+		Image scaledImg = img;
+		scaledImg = img.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);
+		return scaledImg;
 	}
 
 	/**
@@ -516,6 +913,11 @@ public enum RenderingMode{
 		 */
 		private int valueLen;
 
+		
+		private static Map<String, Image> bindImgMap = new HashMap<String, Image>();
+		
+		private static Image DUMMY_KEY = null;
+
 		/**
 		 * Initialises and resets this cache
 		 * for the given rendering mode
@@ -566,6 +968,56 @@ public enum RenderingMode{
 
 			g.setFont(valueFont);
 			g.drawString(value, valuePos.x, valuePos.y);
+		}
+		
+		public final void renderBindImg(String bImg, Graphics2D g, BasePanel panel, RenderingMode mode, boolean active){
+			// alpha => 0~100 (100 is opacity)
+			int alpha = 0;
+			Image img;
+			Point imagePos;
+			
+			
+			switch(mode) {
+			case ONLY_IMAGE:
+			case VERTICAL_TEXT_WITH_IMAGE:
+			case VERTICAL_VALUE_WITH_IMAGE:
+				alpha = 100; break;
+			case VERTICAL_TEXT_VALUE_IMAGE:
+				alpha = 60;
+			default:
+			}
+			
+			if(!bindImgMap.containsKey(bImg)) {
+				try{
+					if(BindImgDialog.class.getResource("").getProtocol() == "file") {
+						String projectPath = new File(".").getAbsoluteFile().toString().replace("\\", "/");
+						String filePath = projectPath.substring(0, projectPath.lastIndexOf("K")) + "images/" + bImg;
+						
+						//bindImgMap.put(bImg, ImageIO.read(RenderCache.class.getResourceAsStream("/LS/" + bImg)));
+						bindImgMap.put(bImg, ImageIO.read(new File(filePath)));
+					}else {
+						String filePath = "";
+						String curPath = BindImgDialog.class.getProtectionDomain().getCodeSource().getLocation().getPath().toString();
+						filePath = curPath.substring(0, curPath.lastIndexOf("/")) + "/images/" + bImg;
+						bindImgMap.put(bImg, ImageIO.read(new File(filePath)));
+					}
+				}catch(IOException e) {
+				}catch(IllegalArgumentException e) {
+				}
+			}
+			
+			img = bindImgMap.getOrDefault(bImg, DUMMY_KEY);
+			if(img != null){
+				img = mode.getScaledImg(img, g, panel);
+				imagePos = mode.getBindImgeDrawPosition(g, panel, img).getLocation();
+				if(active) {
+					alpha = 30;
+				}
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha/100.0F));
+				g.drawImage(img, imagePos.x, imagePos.y, panel);
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0));
+				
+			}
 		}
 	}
 }

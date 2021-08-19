@@ -68,6 +68,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.drawImage(ColorManager.graph_lower_middle, Main.config.borderOffset + imageSize, this.getHeight() - Main.config.borderOffset - imageSize, this.getWidth() - Main.config.borderOffset - imageSize, this.getHeight() - Main.config.borderOffset, 0, 0, 46, 4, this);
 		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - Main.config.borderOffset - imageSize, Main.config.borderOffset + imageSize, this.getWidth() - Main.config.borderOffset, this.getHeight() - Main.config.borderOffset - imageSize, 0, 0, 4, 56, this);
 		
+		
 		if(isActive()){
 			g.setColor(ColorManager.activeColor);
 			g.fillRect(
@@ -80,10 +81,13 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		}else{
 			g.setColor(Main.config.getForegroundColor());
 		}
-
+		
+		
 		cache.renderTitle(getTitle(), g, this);
 
 		cache.renderValue(getValue(), g, this);
+		
+		cache.renderBindImg(getBindImg(), g, this, getRenderingMode(), isActive());
 	}
 
 	/**
@@ -112,4 +116,6 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * @return The rendering mode for this panel
 	 */
 	protected abstract RenderingMode getRenderingMode();
+
+	protected abstract String getBindImg();
 }

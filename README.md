@@ -1,25 +1,29 @@
-# Keys Per Second ![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg) ![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)
+# Keys Per Second for LostSaga
 
-KeysPerSecond is a program that counts how many times certain keys are pressed. And shows what the average, maximum and current number of keys pressed per second is. The program can also show a nice graph of the key presses over time.    
-Almost all aspects of the program are also fully customizable.   
+KeysPerSecond for Lostsaga is a program that counts how many times certain keys are pressed. And shows what the average, maximum and current number of keys pressed per second is and image of LostSaga heroes. The program can also show a nice graph of the key presses over time.    
+Almost all aspects of the program are also fully customizable. This program modified KeysPerSecond : [Original](https://github.com/RoanH/KeysPerSecond)
+
 
 [Jump directly to downloads](#downloads)
 
 # Introduction
-Originally I wanted to know how many keys I pressed per second in osu! And I had already seen programs like this on live streams.
-I could however not find a program that worked well on my computer so I decided to write one myself.
+Originally I wanted to make a keyboard input viewer like KeysPerSecond for LostSaga. So I modified RoanH's KPS.
 
 The program when active looks like this:    
+![Interface](https://user-images.githubusercontent.com/53378637/128698767-a8a2ff04-463b-4c6a-8d38-fcc47f95224f.jpg)
 ![Interface](http://i.imgur.com/9cCzB0Q.png)  ![Interface](http://i.imgur.com/bLQXABw.png)    
 There is also a right click menu to configure all the settings:    
 ![Menu](https://i.imgur.com/lltS2NK.png)    
 
-For each configured key the program will show how many times it was pressed. By default it will also show the maximum, average and current number of keys pressed per second.
+For each configured key the program will show how many times it was pressed. And also you can show hero's image where it corresponding to. By default it will also show the maximum, average and current number of keys pressed per second.
 When enabled it can also show a graph of the number of keys pressed per second over time and the total number of keys pressed.
 
 Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.      
-![Config](https://i.imgur.com/QcEm7Og.png)  ![Key config](https://i.imgur.com/Zjuc7Na.png)    
-![Layout](https://i.imgur.com/w61exGO.png)    
+![Config](https://user-images.githubusercontent.com/53378637/128697306-06a41740-5e5c-413b-a3f6-fcb234ed42c2.jpg)  
+![Key config](https://user-images.githubusercontent.com/53378637/128698093-ea198e06-9d77-4096-b7a6-4ffc128b37f3.jpg)   
+![Layout](https://user-images.githubusercontent.com/53378637/128697309-30c1d2ba-bdd8-49ad-a7fd-9fa83677038f.jpg)   
+![Advanced layout settings](https://user-images.githubusercontent.com/53378637/128697313-2234c050-ab65-43ee-8eaf-ac29113af6ca.jpg)
+![Bind image to key](https://user-images.githubusercontent.com/53378637/128697312-8c55b0d4-7467-4478-b34b-3fd474983550.jpg)
 
 There are also some commands that can be sent to the program:    
 **Ctrl + P**: Causes the program to reset the average and maximum value.    
@@ -34,9 +38,14 @@ You can also move the program using the arrow keys or snap it to the edges of yo
 Well I hope some of you find this program useful and/or will use it for your streams (I would love to see that happen  :) ).
 And if you find any bugs feel free to report them. If you have any features you'd like to see added please tell me as well!
 
+## Pre-Created Config Files
+![Pre-Created Config Files](https://user-images.githubusercontent.com/53378637/128699216-be6da37b-0467-41e4-b81b-a28045cecc35.jpg)
+You don't have to set key/layout config from scratch. I already made some example config files on 'config' folder. You can load a file which you want to use.
+
 ## Notes
 - The horizontal line in the graph represents the average number of keys pressed per second.
 - You can add any key, and any number of keys to the program.
+- You can also add hero's image on mapping key.
 - You can also track mouse buttons with this program.
 - The overlay option is far form perfect it just ask the OS to place the program on top. It'll not overlay most full screen games.
 - To change a GUI colour in the colours menu, click on the current colour
@@ -51,14 +60,10 @@ And if you find any bugs feel free to report them. If you have any features you'
 It's kinda empty here right now :c, so please suggest things c:    
 
 ## Downloads
-_Requires Java 8 or higher_    
-_Tested operating systems: Mac 10.11.6, Ubuntu Linux 16.04 LTS, Windows 7 & 8 & 10_    
-- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.4/KeysPerSecond-v8.4.exe)    
-- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.4/KeysPerSecond-v8.4.jar)
+- [Zip](https://github.com/SsalHub/LSkeyspersecond/releases/download/1.0/KeysPerSecond_LS_alpha-1.0.zip)    
 
-All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
-GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    
-Original osu! forum post: [post](https://osu.ppy.sh/community/forums/topics/552405)    
+All releases: [releases](https://github.com/SsalHub/LSkeyspersecond/releases)    
+GitHub repository: [here](https://github.com/SsalHub/LSkeyspersecond)
 
 ## Examples
 The following two examples show the layout while it is being edited. All the panels have to line up with the grid, but the size of the grid cells can be changed.    
@@ -71,4 +76,4 @@ Last are some very simple layouts to highlight the title-value display options.
 ![Modes](https://i.imgur.com/0769n9E.png)      
 
 ## History
-Project development started: 23 January 2017
+Project development started: 27 July 2021

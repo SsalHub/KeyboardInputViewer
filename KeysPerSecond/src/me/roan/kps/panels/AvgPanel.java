@@ -59,4 +59,9 @@ public final class AvgPanel extends BasePanel{
 	protected RenderingMode getRenderingMode(){
 		return Main.config.avg_mode;
 	}
+	
+	@Override
+	protected String getBindImg() {
+		return Main.config.avg_bImg;
+	}
 }

@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,15 +51,15 @@ public class Configuration{
 	/**
 	 * Whether or not to show the max value
 	 */
-	public boolean showMax = true;
+	public boolean showMax = false;
 	/**
 	 * Whether or not to show the average value
 	 */
-	public boolean showAvg = true;
+	public boolean showAvg = false;
 	/**
 	 * Whether or not to show the current value
 	 */
-	public boolean showCur = true;
+	public boolean showCur = false;
 	/**
 	 * Whether or not to show the keys
 	 */
@@ -132,27 +133,27 @@ public class Configuration{
 	/**
 	 * Reset stats command key
 	 */
-	protected CMD CP = new CMD(NativeKeyEvent.VC_P, false, true);
+	protected CMD CP = new CMD(NativeKeyEvent.VC_P, NativeKeyEvent.KEY_LOCATION_STANDARD, false, true);
 	/**
 	 * Reset totals command key
 	 */
-	protected CMD CI = new CMD(NativeKeyEvent.VC_I, false, true);
+	protected CMD CI = new CMD(NativeKeyEvent.VC_I, NativeKeyEvent.KEY_LOCATION_STANDARD, false, true);
 	/**
 	 * Exit command key
 	 */
-	protected CMD CU = new CMD(NativeKeyEvent.VC_U, false, true);
+	protected CMD CU = new CMD(NativeKeyEvent.VC_U, NativeKeyEvent.KEY_LOCATION_STANDARD, false, true);
 	/**
 	 * Hide/show command key
 	 */
-	protected CMD CY = new CMD(NativeKeyEvent.VC_Y, false, true);
+	protected CMD CY = new CMD(NativeKeyEvent.VC_Y, NativeKeyEvent.KEY_LOCATION_STANDARD, false, true);
 	/**
 	 * Pause command key
 	 */
-	protected CMD CT = new CMD(NativeKeyEvent.VC_T, false, true);
+	protected CMD CT = new CMD(NativeKeyEvent.VC_T, NativeKeyEvent.KEY_LOCATION_STANDARD, false, true);
 	/**
 	 * Reload command key
 	 */
-	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
+	protected CMD CR = new CMD(NativeKeyEvent.VC_R, NativeKeyEvent.KEY_LOCATION_STANDARD, false, true);
 
 	//special panels / layout
 	/**
@@ -178,6 +179,7 @@ public class Configuration{
 	/**
 	 * The x position of the max panel
 	 */
+	public String avg_bImg = null;
 	public int max_x = -1;
 	/**
 	 * The y position of the max panel
@@ -198,6 +200,10 @@ public class Configuration{
 	/**
 	 * The x position of the current panel
 	 */
+	
+	public String max_bImg = null;
+	
+	
 	public int cur_x = -1;
 	/**
 	 * The y position of the current panel
@@ -218,6 +224,7 @@ public class Configuration{
 	/**
 	 * The x position of the total panel
 	 */
+	public String cur_bImg = null;
 	public int tot_x = -1;
 	/**
 	 * The y position of the total panel
@@ -239,6 +246,7 @@ public class Configuration{
 	 * The offset from the border of a panel
 	 * to the actual panel content
 	 */
+	public String tot_bImg = null;
 	public int borderOffset = 2;
 	/**
 	 * The pixel size of one cell in this program
@@ -459,7 +467,7 @@ public class Configuration{
 				if(args[0].startsWith("keys")){
 					while((line = in.readLine()) != null && (line = line.trim()).startsWith("-")){
 						try{
-							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode, v2));
+							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode,  v2));
 						}catch(Exception e){
 							modified = true;
 						}
@@ -931,7 +939,7 @@ public class Configuration{
 				break;
 			}
 		}
-		return new CMD(code, alt, ctrl);
+		return new CMD(code, NativeKeyEvent.KEY_LOCATION_STANDARD, alt, ctrl);
 	}
 
 	/**
@@ -946,6 +954,7 @@ public class Configuration{
 		String[] args = arg.substring(1, arg.length() - 1).split(",", v2 ? 7 : 11);
 		String name = null;
 		int code = -1;
+		int location = 0;
 		int x = -1;
 		int y = 0;
 		int width = 2;
@@ -954,12 +963,16 @@ public class Configuration{
 		boolean ctrl = false;
 		boolean alt = false;
 		boolean shift = false;
+		String bImg = null;
 		for(String str : args){
 			String[] comp = str.split("=", 2);
 			comp[1] = comp[1].trim();
 			switch(comp[0].trim()){
 			case "keycode":
 				code = Integer.parseInt(comp[1]);
+				break;
+			case "keyLocation":
+				location = Integer.parseInt(comp[1]);
 				break;
 			case "visible":
 				visible = Boolean.parseBoolean(comp[1]);
@@ -991,17 +1004,20 @@ public class Configuration{
 			case "mode":
 				mode = RenderingMode.valueOf(comp[1]);
 				break;
+			case "bImg":
+				bImg = comp[1];
 			}
 		}
 		if(!CommandKeys.isNewFormat(code)){
-			code = CommandKeys.getExtendedKeyCode(code % 1000, shift, ctrl, alt);
+			code = CommandKeys.getExtendedKeyCode(code, location, shift, ctrl, alt);
 		}
-		KeyInformation kinfo = new KeyInformation(name, code, visible);
+		KeyInformation kinfo = new KeyInformation(name, code, location, visible);
 		kinfo.x = x;
 		kinfo.y = y;
 		kinfo.width = width;
 		kinfo.height = height;
 		kinfo.mode = mode;
+		kinfo.bImg = bImg;
 		return kinfo;
 	}
 
@@ -1176,21 +1192,25 @@ public class Configuration{
 				out.println("maxWidth: " + max_w);
 				out.println("maxHeight: " + max_h);
 				out.println("maxMode: " + max_mode.name());
+				out.println("maxBingImg: " + max_bImg);
 				out.println("avgX: " + avg_x);
 				out.println("avgY: " + avg_y);
 				out.println("avgWidth: " + avg_w);
 				out.println("avgHeight: " + avg_h);
 				out.println("avgMode: " + avg_mode.name());
+				out.println("avgBingImg: " + avg_bImg);
 				out.println("curX: " + cur_x);
 				out.println("curY: " + cur_y);
 				out.println("curWidth: " + cur_w);
 				out.println("curHeight: " + cur_h);
 				out.println("curMode: " + cur_mode.name());
+				out.println("curBingImg: " + cur_bImg);
 				out.println("totX: " + tot_x);
 				out.println("totY: " + tot_y);
 				out.println("totWidth: " + tot_w);
 				out.println("totHeight: " + tot_h);
 				out.println("totMode: " + tot_mode.name());
+				out.println("totBingImg: " + tot_bImg);
 				out.println("graphX: " + graph_x);
 				out.println("graphY: " + graph_y);
 				out.println("graphWidth: " + graph_w);

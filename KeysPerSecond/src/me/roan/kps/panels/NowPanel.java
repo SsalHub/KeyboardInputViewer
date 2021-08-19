@@ -63,4 +63,9 @@ public final class NowPanel extends BasePanel{
 	protected RenderingMode getRenderingMode(){
 		return Main.config.cur_mode;
 	}
+	
+	@Override
+	protected String getBindImg() {
+		return Main.config.cur_bImg;
+	}
 }

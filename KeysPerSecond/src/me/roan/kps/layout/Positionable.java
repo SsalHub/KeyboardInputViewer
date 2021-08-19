@@ -1,5 +1,7 @@
 package me.roan.kps.layout;
 
+import java.io.InputStream;
+
 import me.roan.kps.RenderingMode;
 
 /**
@@ -72,5 +74,10 @@ public abstract interface Positionable{
 	 * Sets the rendering mode for this panel
 	 * @param mode The new rendering mode
 	 */
+	
 	public abstract void setRenderingMode(RenderingMode mode);
+	
+	public abstract String getBindingImg();
+	
+	public abstract void setBindingImg(String bImg);
 }
