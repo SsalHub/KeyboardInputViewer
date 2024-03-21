@@ -1,0 +1,6 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.project.sourcePaths": ["KeysPerSecond/src"],
+  "java.dependency.syncWithFolderExplorer": false,
+  "java.project.explorer.showNonJavaResources": false
+}

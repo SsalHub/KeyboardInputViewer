@@ -1,8 +1,9 @@
 plugins{
 	id 'java'
 	id 'application'
-	id 'eclipse'
-	id 'com.github.johnrengelman.shadow' version '5.1.0'
+//	id 'eclipse'
+	/* id 'com.github.johnrengelman.shadow' version '5.1.0' */
+	id 'com.github.johnrengelman.shadow' version '7.1.0'
 	id 'edu.sc.seis.launch4j' version '2.4.6'
 }
 
@@ -23,10 +24,11 @@ javadoc{
 
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
-version = '1.0'//Don't forget Main.java
-shadowJar.archiveName = 'KeysPerSecond-' + project.version + '.jar'
+version = '1.1'     //Don't forget Main.java
+//shadowJar.archiveName = 'KeysPerSecond-' + project.version + '.jar'
+shadowJar.archiveName = 'KeyboardInputViewer-' + project.version + '.jar'
 
-repositories{
+/* repositories{
 	//Local cache
 	if(project.hasProperty("nexusPublic")){
 		maven{
@@ -39,11 +41,18 @@ repositories{
 	maven{
 		url "https://jitpack.io"
 	}
-}
+} */
+dependencyResolutionManagement {
+		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+		repositories {
+			mavenCentral()
+			maven { url 'https://jitpack.io' }
+		}
+	}
 
 dependencies{
-	implementation 'com.github.RoanH:Util:v1.6'
-	implementation 'com.github.kwhat:jnativehook:2.2-20210323.163306-38'
+	implementation 'com.github.RoanH:Util:v2.5'
+    implementation 'com.github.kwhat:jnativehook:2.2.2'
 }
 
 application{
@@ -52,7 +61,8 @@ application{
 
 launch4j{
 	mainClassName = application.mainClassName
-	icon = "${projectDir}/kps.ico"
+	//icon = "${projectDir}/kps.ico"
+	icon = "${projectDir}/kiv.ico"
 	jreMinVersion = project.sourceCompatibility
 	outfile = project.name + '-' + project.version + '.exe'
 	fileDescription = project.name
