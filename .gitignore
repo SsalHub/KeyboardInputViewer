@@ -5,7 +5,7 @@
 build
 
 # Temporary Import dev.roanh.util - ignore from github
-./KeyboardInputViewer/src/dev/roanh/
+./KeyboardInputViewer/src/locallib/roanh/
 
 ###########################################################
 
