@@ -83,7 +83,7 @@ public class Statistics {
         JButton select = new JButton("Select");
         selectFile.add(select, BorderLayout.LINE_END);
         select.addActionListener((e) -> {
-            File dir = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
+            File dir = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats").toFile();
             if (dir != null) {
                 selectedFile.setText(dir.getAbsolutePath());
             }
@@ -121,7 +121,7 @@ public class Statistics {
         extras.add(seldest);
         labels.add(new JLabel("Save location: "));
         seldest.addActionListener((e) -> {
-            File dir = Dialog.showFolderOpenDialog();
+            File dir = Dialog.showFolderOpenDialog().toFile();
             if (dir != null) {
                 ldest.setText(dir.getAbsolutePath());
             }
@@ -307,7 +307,7 @@ public class Statistics {
      * to save to
      */
     protected static void saveStats() {
-        File file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
+        File file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats").toFile();
         if (file != null) {
             try {
                 saveStats(file);
@@ -348,7 +348,7 @@ public class Statistics {
      * a prompt to the user for the file.
      */
     protected static void loadStats() {
-        File file = Dialog.showFileOpenDialog(KPS_STATS_EXT);
+        File file = Dialog.showFileOpenDialog(KPS_STATS_EXT).toFile();
         if (file == null) {
             return;
         }

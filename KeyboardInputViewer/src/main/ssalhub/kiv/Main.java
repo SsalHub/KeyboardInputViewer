@@ -9,6 +9,7 @@ import java.awt.IllegalComponentStateException;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -475,7 +476,7 @@ public class Main {
             if (config.trackAllKeys && nevent instanceof NativeKeyEvent) {
                 keys.put(code,
                         new Key(KeyInformation.getKeyName(
-                                NativeKeyEvent.getKeyText(((NativeKeyEvent) nevent).getKeyCode(), keyLocation), code,
+                                NativeKeyEvent.getKeyText(((NativeKeyEvent) nevent).getKeyCode()), code,
                                 keyLocation)));
             } else if (config.trackAllButtons && nevent instanceof NativeMouseEvent) {
                 keys.put(code, new Key("M" + ((NativeMouseEvent) nevent).getButton()));
@@ -845,7 +846,7 @@ public class Main {
         thxBtn.addActionListener((e) -> {
             String RoanH = new String("<p>Original Program Developer :<br><b>RoanH</b></p>");
             // String jegalryang = new String("<p>Resource Provided
-            // :<br><b>제갈량</b></p>");
+            // :<br><b>?��갈량</b></p>");
             // String doctor48 = new String("<p>Resource Edited :<br><b>박사48</b></p>");
             String s = String.format("<html><left>%s</left></html>", RoanH);
             JLabel thxList = new JLabel(s);
@@ -984,7 +985,7 @@ public class Main {
         cform.add(lbg);
         cform.add(cbg);
         cform.add(spanelbg);
-        if (Dialog.showSaveDialog(cform, false)) {
+        if (Dialog.showSaveDialog(cform, false, ModalityType.APPLICATION_MODAL)) {
             config.foreground = cfg.getBackground();
             config.background = cbg.getBackground();
             config.opacitybg = (float) ((int) sbg.getValue() / 100.0D);
@@ -1859,7 +1860,7 @@ public class Main {
                             return "Right Shift";
                     }
                 default:
-                    return NativeKeyEvent.getKeyText(keyCode, keyLocation);
+                    return NativeKeyEvent.getKeyText(keyCode);
             }
         }
 

@@ -401,7 +401,7 @@ public class Configuration {
      * @return Whether or not the config was loaded successfully
      */
     protected static final boolean loadConfiguration() {
-        File saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
+        File saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT).toFile();
         if (saveloc == null) {
             return false;
         }
@@ -1157,7 +1157,7 @@ public class Configuration {
     protected final void saveConfig(boolean pos) {
         boolean savepos = (!pos) ? false
                 : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
-        File saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
+        File saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config").toFile();
         if (saveloc != null) {
             try {
                 PrintWriter out = new PrintWriter(

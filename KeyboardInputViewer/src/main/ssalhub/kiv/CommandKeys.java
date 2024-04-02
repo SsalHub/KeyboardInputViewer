@@ -272,7 +272,7 @@ public class CommandKeys {
 
         @Override
         public String toString() {
-            return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + NativeKeyEvent.getKeyText(keycode, keyLocation);
+            return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + NativeKeyEvent.getKeyText(keycode);
         }
 
         /**

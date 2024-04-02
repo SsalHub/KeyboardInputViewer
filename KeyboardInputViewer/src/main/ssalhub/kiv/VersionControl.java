@@ -3,6 +3,7 @@ package main.ssalhub.kiv;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Window;
+import java.awt.Dialog.ModalityType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,6 +40,8 @@ public class VersionControl {
     private static Image icon = null;
 
     private static JFrame parentFrame = null;
+
+    private static String fileName = "", fileUrl = "";
 
     public static final void setDialogIcon(Image icon) {
         VersionControl.icon = icon;
@@ -111,15 +114,20 @@ public class VersionControl {
         if (cur_main > max_main || cur_sub >= max_sub)
             return;
 
-        if (Dialog.showDialog(new JLabel("You can update to " + latestVer + " version."), false,
-                new String[] { "Update", "No" }) == 0) {
+        if (Dialog.showDialog(new JLabel("You can update to " + latestVer + "version."), false,
+                ModalityType.APPLICATION_MODAL).getDefaultCloseOperation() == 0) {
             // run auto update
-            String fileName = "KeyboardInputViewer_" + latestVer + ".exe";
-            String fileUrl = "https://github.com/SsalHub/" + repos + "/releases/download/" + latestVer + "/" + fileName;
+            fileName = "KeyboardInputViewer_" + latestVer + ".exe";
+            fileUrl = "https://github.com/SsalHub/" + repos + "/releases/download/" + latestVer + "/" + fileName;
 
             new Thread(() -> {
-                JDialog downloadDialog = new JOptionPane(new JLabel("Downloading " + fileName + " ..."),
-                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {}, 0)
+                JDialog downloadDialog = new JOptionPane(
+                        new JLabel("Downloading " + fileName + " ..."),
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        new String[] {},
+                        0)
                         .createDialog("Download latest version");
                 JPanel downloadPanel = new JPanel(new BorderLayout());
                 JLabel downloadLabel = new JLabel("Downloading " + fileName + " ...");
@@ -173,9 +181,8 @@ public class VersionControl {
 
                         JOptionPane.showMessageDialog(null, new JLabel("Successfully downloaded latest version."));
 
-                        Runtime.getRuntime().exec(fileName);
+                        Runtime.getRuntime();
                         System.exit(0);
-
                     } else {
                         // download canceled
                         JOptionPane.showMessageDialog(null, new JLabel("Download canceled."));
@@ -201,7 +208,6 @@ public class VersionControl {
                     JOptionPane.showMessageDialog(null, new JLabel("Update failed."));
                 }
             }, "Lastest version downloader").start();
-
         }
         ;
     }

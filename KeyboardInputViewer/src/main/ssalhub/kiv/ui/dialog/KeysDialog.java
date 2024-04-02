@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Dialog.ModalityType;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,7 +81,8 @@ public class KeysDialog {
         // String[] options = new String[] {"Cusom setting", "*All keys", "*Basic+Arrow
         // keys", "*Basic+Numpad keys"};
         String[] options = new String[] { "Cusom setting", "*All keys" };
-        selection = Dialog.showDialog(basePanel, false, options);
+        // selection = Dialog.showDialog(basePanel, false, options);
+        selection = Dialog.showDialog(basePanel, false, ModalityType.APPLICATION_MODAL).getDefaultCloseOperation();
         switch (selection) {
             case 0:
                 configureKeys();
@@ -129,7 +131,7 @@ public class KeysDialog {
         nbuttons.add(newmouse, BorderLayout.LINE_END);
         keyform.add(nbuttons, BorderLayout.PAGE_END);
 
-        if (!Dialog.showSaveDialog(keyform, true)) {
+        if (!Dialog.showSaveDialog(keyform, true, ModalityType.APPLICATION_MODAL)) {
             for (int i = 0; i < copy.size(); i++) {
                 copy.get(i).visible = visibleState[i];
                 copy.get(i).setName(nameState[i]);
@@ -213,7 +215,7 @@ public class KeysDialog {
                 return;
             }
             KeyInformation info = new KeyInformation(
-                    NativeKeyEvent.getKeyText(Main.lastevent.getKeyCode(), Main.lastevent.getKeyLocation()),
+                    NativeKeyEvent.getKeyText(Main.lastevent.getKeyCode()),
                     Main.lastevent.getKeyCode(), Main.lastevent.getKeyLocation(),
                     (alt.isSelected() || CommandKeys.isAltDown) && Main.config.enableModifiers,
                     (ctrl.isSelected() || CommandKeys.isCtrlDown) && Main.config.enableModifiers,
@@ -431,7 +433,7 @@ public class KeysDialog {
         };
 
         for (int[] infoList : allKeyInfoList) {
-            KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(infoList[0], infoList[1]), infoList[0],
+            KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(infoList[0]), infoList[0],
                     infoList[1], (false || CommandKeys.isAltDown) && Main.config.enableModifiers,
                     (false || CommandKeys.isCtrlDown) && Main.config.enableModifiers,
                     (false || CommandKeys.isShiftDown) && Main.config.enableModifiers, false);

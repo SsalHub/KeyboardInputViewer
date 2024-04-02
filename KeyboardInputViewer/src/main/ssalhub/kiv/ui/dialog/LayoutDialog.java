@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Window;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -945,7 +946,8 @@ public class LayoutDialog {
             form.add(setGaps, BorderLayout.NORTH);
             form.add(setModes, BorderLayout.CENTER);
 
-            if (Dialog.showDialog(form, false, new String[] { "OK", "Cancel" }) == 0) {
+            // if (Dialog.showDialog(form, false, new String[] { "OK", "Cancel" }) == 0) {
+            if (Dialog.showDialog(form, false, ModalityType.APPLICATION_MODAL).getDefaultCloseOperation() == 0) {
                 if (isSetGapsCHB.isSelected()) {
                     allItem.setWidth(tmpItem.getWidth());
                     allItem.setHeight(tmpItem.getHeight());
