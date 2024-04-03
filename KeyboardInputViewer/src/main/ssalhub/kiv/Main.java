@@ -846,7 +846,7 @@ public class Main {
         thxBtn.addActionListener((e) -> {
             String RoanH = new String("<p>Original Program Developer :<br><b>RoanH</b></p>");
             // String jegalryang = new String("<p>Resource Provided
-            // :<br><b>?��갈량</b></p>");
+            // :<br><b>제갈량</b></p>");
             // String doctor48 = new String("<p>Resource Edited :<br><b>박사48</b></p>");
             String s = String.format("<html><left>%s</left></html>", RoanH);
             JLabel thxList = new JLabel(s);
